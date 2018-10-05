@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>BookIIT</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    
+    <link href="https://fonts.googleapis.com/css?family=Raleway" rel="stylesheet">
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/open-iconic-bootstrap.min.css">
+    <link rel="stylesheet" href="css/icomoon.css">
+    <link rel="stylesheet" href="css/style.css">
+  </head>
+  <body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark probootstrap-navabr-dark">
+        <div class="container">
+          <a class="navbar-brand" href="index.html">[PH]bookIIT</a>
+          <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#probootstrap-nav" aria-controls="probootstrap-nav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+
+          <div class="collapse navbar-collapse" id="probootstrap-nav">
+            <ul class="navbar-nav ml-auto">
+              <li class="nav-item"><a href="cal.html" class="nav-link">Calendar</a></li>
+            </ul>
+           
+          </div>
+        </div>
+      </nav>
+
+     
+    <section class="probootstrap-cover">
+      <div class="container">
+        <div class="row probootstrap-vh-100 align-items-center text-center">
+          <div class="col-sm">
+            <div class="probootstrap-text">
+              <h1 class="probootstrap-heading text-white mb-4">[PH]bookIIT</h1>
+              <div class="probootstrap-subheading mb-5">
+                <p class="h4 font-weight-normal">MSU-IIT's Online Event Booking for Everyone.</p>
+              </div>
+              <p><a class="btn btn-primary mr-2 mb-2" data-toggle="modal" data-target="#modLogin">Log In</a>
+				 <a class="btn btn-primary mr-2 mb-2" data-toggle="modal" data-target="#modSignup" >Sign Up</a></p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+
+<!--- LOG IN !--->
+<div id="modLogin" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+     <!---   <h4 class="modal-title">Log In</h4> !--->
+      </div>
+      <div class="modal-body">
+        <form action="#" class="bg-white rounded pb_form_v1">
+              <h2 class="mb-4 mt-0 text-center">Log In</h2>
+              <div class="form-group">
+                <input type="text" class="form-control pb_height-50 reverse" placeholder="Username/Email">
+              </div>
+              <div class="form-group">
+                <input type="text" class="form-control pb_height-50 reverse" placeholder="Password">
+              </div>
+              <div class="form-group">
+                <input type="submit" class="btn btn-primary btn-lg btn-block pb_btn-pill  btn-shadow-blue" value="Log In">
+              </div>
+            </form>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+
+<!--- SIGN UP !--->
+<div id="modSignup" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+      <!---  <h4 class="modal-title">Sign Up</h4> !--->
+      </div>
+      <div class="modal-body">
+        <form action="#" class="bg-white rounded pb_form_v1">
+              <h2 class="mb-4 mt-0 text-center">Sign Up for Free</h2>
+              <div class="form-group">
+                <input type="text" class="form-control pb_height-50 reverse" placeholder="First Name">
+              </div>
+              <div class="form-group">
+                <input type="text" class="form-control pb_height-50 reverse" placeholder="Last Name">
+              </div>
+              <div class="form-group">
+                <input type="text" class="form-control pb_height-50 reverse" placeholder="Email">
+              </div> 
+              <div class="form-group">
+                <input type="text" class="form-control pb_height-50 reverse" placeholder="Password">
+              </div>
+              <div class="form-group">
+                <div class="pb_select-wrap">
+                  <select class="form-control pb_height-50 reverse">
+                    <option value="" selected>Type</option>
+                    <option value="">Basic</option>
+                    <option value="">Business</option>
+                  </select>
+                </div>
+              </div>
+              <div class="form-group">
+                <input type="submit" class="btn btn-primary btn-lg btn-block pb_btn-pill  btn-shadow-blue" value="Sign Up">
+              </div>
+            </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+    <script src="js/jquery-3.2.1.slim.min.js"></script>
+    <script src="js/popper.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/main.js"></script>
+  </body>
+</html>
