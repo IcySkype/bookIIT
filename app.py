@@ -1,67 +1,14 @@
-from flask import Flask,session, request, flash, url_for, redirect, render_template
-from forms import Registration, LogIn
-from flask_sqlalchemy import SQLAlchemy
+from flask import request, flash, url_for, redirect, render_template
+from forms import Registration, LogIn,AddVenue
 from flask_login import login_user , logout_user , current_user , login_required, LoginManager
-
-#for future config.py----------
-app = Flask(__name__)
-app.config['SECRET_KEY'] = 'testfile'
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-#edit this as postgresql://user:pass@host/bookIIT
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://localhost:5432/bookIIT'
-app.static_folder = 'static'
-
-db = SQLAlchemy(app)
-#for future config.py----------
-#for future models.py----------
-class Acc(db.Model):
-    __tablename__ = "account"
-    id = db.Column('acc_id', db.Integer , primary_key=True)
-    type = db.Column('acc_type', db.Integer)
-    username = db.Column('username', db.String(), unique=True, index=True)
-    password = db.Column('password', db.String())
-    email = db.Column('email', db.String(), unique=True, index=True)
-
-    def __init__(self, username, password, email):
-        self.username = username
-        self.type = 0;
-        self.password = password
-        self.email = email
-
-    def is_authenticated(self):
-        return True
-
-    def is_active(self):
-        return True
-
-    def is_anonymous(self):
-        return False
-
-    def get_id(self):
-        return unicode(self.id)
-
-    def __repr__(self):
-        return '<Acc %r>' % (self.username)
-
-class User(db.Model):
-    __tablename__ = "user_acc"
-    id = db.Column('user_id', db.Integer , primary_key=True)
-    fname = db.Column('fname', db.String())
-    lname = db.Column('lname', db.String())
-    contact = db.Column('contact', db.String())
-
-    def __init__(self, id, fname, lname, contact):
-        self.id = id
-        self.fname = fname
-        self.lname = lname
-        self.contact = contact
-#for future models.py----------
+from config import app, db
+from Models import Acc,User,Venue,Location,Room
 
 login_manager = LoginManager()
 login_manager.init_app(app)
 login_manager.login_view = 'login'
 login_manager.login_message = "You have logged out."
-
+#separate as routes.py if linecount is great-----------------------------
 @app.route("/")
 
 @app.route("/index", methods=['GET','POST'])
@@ -73,11 +20,6 @@ def main():
 def landing():
     return render_template('landing.html')
 
-@app.route("/addvenue", methods=['GET'])
-@login_required
-def addvenue():
-    return render_template('addvenue.html')
-
 @app.route("/venue", methods=['GET'])
 @login_required
 def venue():
@@ -88,35 +30,73 @@ def venue():
 def logout():
     flash('You have logged out!')
     logout_user()
-    return redirect(url_for('login'))
+    return redirect(url_for('main'))
 
 @app.route("/register", methods=['GET','POST'])
 def register():
-    if request.method == 'GET':
-        form = Registration()
-        return render_template('register.html', title='Register', form=form)
-    newacc = Acc(request.form['username'],request.form['pass'],request.form['email'])
-    user = User(Acc.get_id(newacc),request.form['fname'], request.form['lname'],request.form['email'])
-    db.session.add(newacc)
-    db.session.add(user)
-    db.session.commit()
-    flash('Account created for {form.username.data}!')
-    return redirect(url_for('login'))
+    form = Registration()
+    if form.validate_on_submit():
+        print form.username.data
+        #if username/email is already used
+        if Acc.query.filter_by(username=form.username.data).first():
+            flash('Username already exists. Try a different username.')
+            return redirect(url_for('register'))
+        if Acc.query.filter_by(email=form.email.data).first():
+            flash('Email already used. Use a different email address.')
+            return redirect(url_for('register'))
+        #if user,email does not exist yet, and passwords match, register.
+        newacc = Acc(username=form.username.data, password=form.password.data, email=form.email.data)
+        db.session.add(newacc)
+        db.session.commit()
+        #user is an account. so create account first before assigning user.
+        user = User(Acc.get_id(newacc),form.fname.data, form.lname.data, '')
+        db.session.add(user)
+        db.session.commit()
+        flash('Account created for Acc.username!')
+        return redirect(url_for('login'))
+    return render_template('register.html', form=form)
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
-    if request.method == 'GET':
-        return render_template('login.html')
-    email = request.form['email']
-    password = request.form['pass']
-    registered_user = Acc.query.filter_by(email=email,password=password).first()
-    if registered_user is None:
-        flash('Email or Password is invalid' , 'error')
-        return redirect(url_for('login'))
-    login_user(registered_user)
-    flash('Logged in successfully')
-    #return redirect(request.args.get('next') or url_for('main'))
-    return render_template('landing.html')
+    form = LogIn(request.form)
+    if form.validate_on_submit():
+        #Does email exist in db?
+        user = Acc.query.filter_by(email=form.email.data).first()
+        if user:
+            #Is pass correct?
+            if user.password == form.password.data:
+                #If email exists and pass is correct, login.
+                login_user(user)
+                flash('Logged in successfully.')
+                return redirect(url_for('landing'))
+        flash ('Invalid email or password.', 'error')
+    return render_template('login.html', form=form)
+
+@app.route("/addvenue", methods=['GET', 'POST'])
+@login_required
+def addvenue():
+    form = AddVenue()
+    if form.validate_on_submit():
+        #If Location isn't filled up, use room name and college
+        if form.location.data == '' or form.location.data == None:
+            newvenue = Venue(capacity=form.capacity.data, rate=form.rate.data, equipment=form.equipment.data, venue_type='Room')
+            db.session.add(newvenue)
+            db.session.commit()
+            venueroom = Room(id=Venue.get_id(newvenue), name=form.room.data, college=form.college.data)
+            db.session.add(venueroom)
+            db.session.commit()
+        #If Location is filled up, use location instead
+        elif form.location.data != '':
+            newvenue = Venue(capacity=form.capacity.data, rate=form.rate.data, equipment=form.equipment.data, venue_type='Non-College Location')
+            db.session.add(newvenue)
+            db.session.commit()
+            location = Location(id=Venue.get_id(newvenue), name=form.location.data)
+            db.session.add(location)
+            db.session.commit()
+        flash('Venue created.')
+        return redirect(url_for('venue'))
+    return render_template('addvenue.html', form=form)
+#separate as routes.py if linecount is great-----------------------------
 
 @login_manager.user_loader
 def load_user(acc_id):

@@ -34,72 +34,75 @@
         <div class="container-login100-2">
           <div class="wrap-login100-2">
 
-            <form class="login100-form-2 validate-form">
-              <span class="login100-form-title">
+            <form class="login100-form validate-form" action="/register" method="POST">
+                {{ form.csrf_token }}
+                {% with messages = get_flashed_messages() %}
+                    {% if messages %}
+                        <ul class=flashes>
+                            {% for message in messages %}
+                                <li>{{ message }}</li>
+                            {% endfor %}
+                        </ul>
+                    {% endif %}
+                {% endwith %}
+              <span class="login100-form-title ">
                 Sign Up For Free
               </span>
-
-              <div class="wrap-input100 validate-input" data-validate = "enter warning text here">
-                <input class="input100" type="text" name="fname" placeholder="First Name">
-                <span class="focus-input100"></span>
-              </div>
-
-              <div class="wrap-input100 validate-input" data-validate = "Username is Already Taken">
-                <input class="input100" type="text" name="username" placeholder="Username">
-                <span class="focus-input100"></span>
-              </div>
-
-              <div class="wrap-input100 validate-input" data-validate = "Password is required">
-                <input class="input100" type="password" name="pass" placeholder="Password">
-                <span class="focus-input100"></span>
-                <span class="symbol-input100">
-                  <i class="fa fa-lock" aria-hidden="true"></i>
-                </span>
-              </div>
-
-              <div class="text-center p-t-12">
-                <span class="txt1">
-                  Already have an Account?
-                </span>
-                <a class="txt2" href="/login">
-                  Log In.
-                </a>
-              </div>
-            </form>
-
-            <form class="login100-form-2 validate-form">
-              <span class="login100-form-waste"></span>
-
-              <div class="wrap-input100 validate-input" data-validate = "Valid email is required: ex@abc.xyz">
-                <input class="input100" type="text" name="lname" placeholder="Last Name">
-                <span class="focus-input100"></span>
-              </div>
-
-              <div class="wrap-input100 validate-input" data-validate = "Valid email is required: ex@abc.xyz">
-                <input class="input100" type="email" name="email" placeholder="Email">
-                <span class="focus-input100"></span>
-                <span class="symbol-input100">
-                  <i class="fa fa-envelope" aria-hidden="true"></i>
-                </span>
-              </div>
-
-              <div class="wrap-input100 validate-input" data-validate = "Password is required">
-                <input class="input100" type="password" name="pass2" placeholder="Retype Password">
-                <span class="focus-input100"></span>
-                <span class="symbol-input100">
-                  <i class="fa fa-lock" aria-hidden="true"></i>
-                </span>
+              <div class="row">
+                <div class="wrap-input100 validate-input" data-validate = "Enter Error Message">
+                  {{ form.fname.label(class="form-control-label") }}
+                  {{ form.fname(class="input100") }}
+                </div>
+              
+                <div class="wrap-input100 validate-input" data-validate = "Enter Error Message">
+                  {{ form.lname.label(class="form-control-label") }}
+                  {{ form.lname(class="input100") }}
+                </div>
               </div>
               
-              <div class="container-login100-form-btn">
-                <button action='/register' method=POST class="login100-form-btn">
-                  Create Account
-                </button>
-              </div>
-            </form>
-          
-          </div>
+              <div class="row">
+                <div class="wrap-input100 validate-input" data-validate = "Enter Error Message">
+                  {{ form.username.label(class="form-control-label") }}
+                  {{ form.username(class="input100") }}
+                </div>
 
+                <div class="wrap-input100 validate-input" data-validate = "Valid email is required: ex@abc.xyz">
+                  {{ form.email.label(class="form-control-label") }}
+                  {{ form.email(class="input100") }}
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="wrap-input100 validate-input" data-validate = "Enter Error Message">
+                  {{ form.password.label(class="form-control-label") }}
+                  {{ form.password(class="input100") }}
+                </div>
+
+                <div class="wrap-input100 validate-input" data-validate = "Enter Error Message">
+                  {{ form.confirm_password.label(class="form-control-label") }}
+                  {{ form.confirm_password(class="input100") }}
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="wrap-input100">  
+                  <span class="txt1">
+                    <br>
+                    Already have an Account?
+                  </span>
+                  <a class="txt2" href="/login">
+                    Log In.
+                  </a>
+                </div>
+              
+                <div class="wrap-input100">
+                  <br>
+                    <input type="submit" class="login100-form-btn" value="Create Account">
+                </div>
+              </div>
+
+            </form>
+            </div>
         </div>
       </div>  
     </section>
